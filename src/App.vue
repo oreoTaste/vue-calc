@@ -2,38 +2,35 @@
   <div id="app">
     <div class="calculator">
       <div class="result">{{curNote}}</div>
-      <div class="btn-ac" v-on:click="clear">AC</div>
-      <div class="btn-plsmns" v-on:click="changePlsMns">+/-</div>
-      <div class="btn-del" v-on:click="deleteDigit">DEL</div>
-      <div class="btn-div" v-on:click="onClickDevide">/</div>
-      <div class="btn-num" v-on:click="onClickNum">7</div>
-      <div class="btn-num" v-on:click="onClickNum">8</div>
-      <div class="btn-num" v-on:click="onClickNum">9</div>
-      <div class="btn-mul" v-on:click="onClickMultiply">x</div>
-      <div class="btn-num" v-on:click="onClickNum">4</div>
-      <div class="btn-num" v-on:click="onClickNum">5</div>
-      <div class="btn-num" v-on:click="onClickNum">6</div>
-      <div class="btn-min" v-on:click="onClickMinus">-</div>
-      <div class="btn-num" v-on:click="onClickNum">1</div>
-      <div class="btn-num" v-on:click="onClickNum">2</div>
-      <div class="btn-num" v-on:click="onClickNum">3</div>
-      <div class="btn-pls" v-on:click="onClickPlus">+</div>
-      <div class="btn-num btn-zero" v-on:click="onClickNum">0</div>
-      <div class="btn-dot" v-on:click="onClickDot">.</div>
-      <div class="btn-equ" v-on:click="onClickEqual">=</div>
+      <div class="btn btn-ac btn-white" v-on:click="clear">AC</div>
+      <div class="btn btn-plsmns btn-white" v-on:click="changePlsMns">+/-</div>
+      <div class="btn btn-del btn-white" v-on:click="deleteDigit">DEL</div>
+      <div class="btn btn-div btn-orange" v-on:click="onClickDevide">/</div>
+      <div class="btn btn-num" v-on:click="onClickNum">7</div>
+      <div class="btn btn-num" v-on:click="onClickNum">8</div>
+      <div class="btn btn-num" v-on:click="onClickNum">9</div>
+      <div class="btn btn-mul btn-orange" v-on:click="onClickMultiply">x</div>
+      <div class="btn btn-num" v-on:click="onClickNum">4</div>
+      <div class="btn btn-num" v-on:click="onClickNum">5</div>
+      <div class="btn btn-num" v-on:click="onClickNum">6</div>
+      <div class="btn btn-min btn-orange" v-on:click="onClickMinus">-</div>
+      <div class="btn btn-num" v-on:click="onClickNum">1</div>
+      <div class="btn btn-num" v-on:click="onClickNum">2</div>
+      <div class="btn btn-num" v-on:click="onClickNum">3</div>
+      <div class="btn btn-pls btn-orange" v-on:click="onClickPlus">+</div>
+      <div class="btn btn-num btn-zero" v-on:click="onClickNum">0</div>
+      <div class="btn btn-dot" v-on:click="onClickDot">.</div>
+      <div class="btn btn-equ btn-orange" v-on:click="onClickEqual">=</div>
     </div>
   </div>
 </template>
 
 <script>
+
   const calc = (text) => {
     return eval(text);
     // let operand = text.split(/[+-/*]/);
     // let operation = text.split('').filter(el => el == '+' || el == '-' || el == '*' || el == '/');
-    // console.log(operand);
-    // console.log(operation);
-    // operation.forEach((el, ind, arr) => if(el == '*' || el == '/') 
-    // )
   }
 
   const slice = (num) => {
@@ -43,12 +40,14 @@
     }
     return tmp.split('').filter((el, ind, arr) => ind < arr.length-1).join('');
   }
+
 export default {
   data(){
     return {
       curStatus: false,
       curNote: 0,
       opStatus: false,
+      opCheck: false,
     }
   },
   methods: {
@@ -71,6 +70,7 @@ export default {
 
     onClickNum: function(e) {
       this.curStatus = true;
+      this.opCheck = false;
       if(this.curNote == 0) {
         this.curNote = e.target.innerText;
       } else {
@@ -86,27 +86,43 @@ export default {
     },
 
     onClickPlus() {
-      if(this.curStatus == true) {
+      if(this.opCheck) { // 연산자 중복입력 불가 체크 및 부호 변경가능 기능 추가
+        this.curNote = this.curNote.slice(0, this.curNote.length - 1) + '+';
+      }
+      if(this.curStatus == true && !this.opCheck) {
         this.curNote += '+';
         this.opStatus = true;
+        this.opCheck = true;
       }      
     },
     onClickMinus() {
-      if(this.curStatus == true) {
+      if(this.opCheck) {
+        this.curNote = this.curNote.slice(0, this.curNote.length - 1) + '-';
+      }
+      if(this.curStatus == true && !this.opCheck) {
         this.curNote += '-';
         this.opStatus = true;
+        this.opCheck = true;
       }
     },
     onClickMultiply() {
-      if(this.curStatus == true) {
+      if(this.opCheck) {
+        this.curNote = this.curNote.slice(0, this.curNote.length - 1) + '*';
+      }
+      if(this.curStatus == true && !this.opCheck) {
         this.curNote += '*';
         this.opStatus = true;
+        this.opCheck = true;
       }
     },
     onClickDevide() {
-      if(this.curStatus == true) {
+      if(this.opCheck) {
+        this.curNote = this.curNote.slice(0, this.curNote.length - 1) + '/';
+      }
+      if(this.curStatus == true && !this.opCheck) {
         this.curNote += '/';
         this.opStatus = true;
+        this.opCheck = true;
       }
     },
 
@@ -114,9 +130,13 @@ export default {
       if(this.opStatus == false) {
         return;
       }
+      if(this.opCheck) {
+        this.curNote = this.curNote.slice(0, this.curNote.length - 1);
+      }
     
       this.curNote = calc(this.curNote);
       this.opStatus = false;
+      this.opCheck = false;
     },
   
   }
@@ -138,7 +158,7 @@ export default {
 }
 .calculator {
   display: grid;
-  grid-template: repeat(1fr, 5) / repeat(1fr, 4);
+  grid-template: repeat(1fr, 6) / repeat(1fr, 4);
 }
 .calculator > * {
   border: 1px solid black;
@@ -146,34 +166,28 @@ export default {
   line-height: 3rem;
   color: white;
 }
-.calculator > *:not(.result) {
+.btn {
   cursor: pointer;
   user-select: none;
+  background-color: gray;  
+}
+.btn-white {
+  background-color: #F2F2F2;
+  color: black;
+}
+.btn-orange {
+  background-color: orange;
 }
 .result {
   grid-column: 1 / span 4;
   grid-row: 1 / span 1;
+  text-align: right;
+  padding-right: 2.5rem;
 }
 .btn-zero {
   grid-column: 1 / span 2;
   grid-row: 6 / span 1;
 }
-.btn-ac,
-.btn-plsmns,
-.btn-del {
-  background-color: #F2F2F2;
-  color: black;
-}
-.btn-num,
-.btn-dot {
-  background-color: gray;  
-}
-.btn-div,
-.btn-mul,
-.btn-min,
-.btn-pls,
-.btn-equ {
-  background-color: orange;
-}
+
 
 </style>
