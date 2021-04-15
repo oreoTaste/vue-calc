@@ -28,9 +28,46 @@
 <script>
 
   const calc = (text) => {
-    return eval(text);
-    // let operand = text.split(/[+-/*]/);
-    // let operation = text.split('').filter(el => el == '+' || el == '-' || el == '*' || el == '/');
+    // return eval(text);
+
+    let operand = text.split(/[+-/*]/);
+    let operation = text.split('').filter(el => el == '+' || el == '-' || el == '*' || el == '/');
+    while(operation.length) {
+      for(let i = 0; i < operation.length; i++) {
+        let tmp = 0;
+        if(operation[i] == '/') {
+          tmp = parseFloat(operand[i]) / parseFloat(operand[i + 1]);
+          operand.splice(i, 1);
+          operation.splice(i, 1);
+          operand[i] = tmp;
+          i--;
+        } else if(operation[i] == '*') {
+          tmp = parseFloat(operand[i]) * parseFloat(operand[i + 1]);
+          operand.splice(i, 1);
+          operation.splice(i, 1);
+          operand[i] = tmp;
+          i--;
+        }
+      }
+      for(let i = 0; i < operation.length; i++) {
+        let tmp = 0;
+        i = parseInt(i);
+        if(operation[i] == '+') {
+          tmp = parseFloat(operand[i]) + parseFloat(operand[i + 1]);
+          operand.splice(i, 1);
+          operation.splice(i, 1);
+          operand[i] = tmp;
+          i--;
+        } else if(operation[i] == '-') {
+          tmp = parseFloat(operand[i]) - parseFloat(operand[i + 1]);
+          operand.splice(i, 1);
+          operation.splice(i, 1);
+          operand[i] = tmp;
+          i--;
+        }
+      }
+    }
+    return operand[0];
   }
 
   const slice = (num) => {
