@@ -85,6 +85,7 @@ export default {
       curNote: 0,
       opStatus: false,
       opCheck: false,
+      dotStatus: false,
     }
   },
   methods: {
@@ -117,55 +118,86 @@ export default {
 
     onClickDot() {
       this.curStatus = true;
-      if(this.curNote.indexOf('.') < 0) {
-        this.curNote += '.'; 
+      if(!this.dotStatus) {
+        if(this.curNote[this.curNote.length - 1] == '*' 
+        || this.curNote[this.curNote.length - 1] == '/' 
+        || this.curNote[this.curNote.length - 1] == '+' 
+        || this.curNote[this.curNote.length - 1] == '-') {
+          this.curNote += '0.'; 
+        } else {
+          this.curNote += '.'; 
+        }
       }
+      this.dotStatus = true;
     },
 
     onClickPlus() {
       if(this.opCheck) { // 연산자 중복입력 불가 체크 및 부호 변경가능 기능 추가
         this.curNote = this.curNote.slice(0, this.curNote.length - 1) + '+';
       }
+      if(this.curNote[this.curNote.length - 1] == '.') {
+        this.curNote = this.curNote.slice(0, this.curNote.length - 1);
+      }
       if(this.curStatus == true && !this.opCheck) {
         this.curNote += '+';
         this.opStatus = true;
         this.opCheck = true;
+        this.dotStatus = false;
       }      
     },
     onClickMinus() {
       if(this.opCheck) {
         this.curNote = this.curNote.slice(0, this.curNote.length - 1) + '-';
       }
+      if(this.curNote[this.curNote.length - 1] == '.') {
+        this.curNote = this.curNote.slice(0, this.curNote.length - 1);
+      }
       if(this.curStatus == true && !this.opCheck) {
         this.curNote += '-';
         this.opStatus = true;
         this.opCheck = true;
+        this.dotStatus = false;
       }
     },
     onClickMultiply() {
       if(this.opCheck) {
         this.curNote = this.curNote.slice(0, this.curNote.length - 1) + '*';
       }
+      if(this.curNote[this.curNote.length - 1] == '.') {
+        this.curNote = this.curNote.slice(0, this.curNote.length - 1);
+      }
       if(this.curStatus == true && !this.opCheck) {
         this.curNote += '*';
         this.opStatus = true;
         this.opCheck = true;
+        this.dotStatus = false;
       }
     },
     onClickDevide() {
       if(this.opCheck) {
         this.curNote = this.curNote.slice(0, this.curNote.length - 1) + '/';
       }
+      if(this.curNote[this.curNote.length - 1] == '.') {
+        this.curNote = this.curNote.slice(0, this.curNote.length - 1);
+      }
       if(this.curStatus == true && !this.opCheck) {
         this.curNote += '/';
         this.opStatus = true;
         this.opCheck = true;
+        this.dotStatus = false;
       }
     },
 
     onClickEqual() {
       if(this.opStatus == false) {
         return;
+      }
+      if(this.curNote[this.curNote.length - 1] == '.'
+        || this.curNote[this.curNote.length - 1] == '*' 
+        || this.curNote[this.curNote.length - 1] == '/' 
+        || this.curNote[this.curNote.length - 1] == '+' 
+        || this.curNote[this.curNote.length - 1] == '-') {
+        this.curNote = this.curNote.slice(0, this.curNote.length - 1);
       }
       if(this.opCheck) {
         this.curNote = this.curNote.slice(0, this.curNote.length - 1);
@@ -174,6 +206,7 @@ export default {
       this.curNote = calc(this.curNote);
       this.opStatus = false;
       this.opCheck = false;
+      this.dotStatus = false;
     },
   
   }
