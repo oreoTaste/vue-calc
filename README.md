@@ -16,4 +16,4 @@ npm run build
 ```
 
 ## 향후 수정사항
-> 함수 calc 내 계산 부분 eval -> stack을 활용하여 수정할 예정  
+> css 속성 (grid) 수정 예정 : chrome 외 지원
